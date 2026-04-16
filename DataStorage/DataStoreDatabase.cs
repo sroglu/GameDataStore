@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace mehmetsrl.DataManagement.DataStore
+namespace mehmetsrl.GameDataStore.Storage
 {
     public interface IDataStoreDatabase : IDisposable { }
     public interface IDataStoreDatabase<T> : IDataStoreDatabase where T : IDataStoreDatabase<T>, new()

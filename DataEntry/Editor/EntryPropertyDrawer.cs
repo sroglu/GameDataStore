@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Reflection;
 
 /*
-namespace mehmetsrl.DataManagement.Entries.Editor
+namespace mehmetsrl.GameDataStore.Entries.Editor
 {
     [CustomPropertyDrawer(typeof(Entry))]
     public class EntryPropertyDrawer : PropertyDrawer

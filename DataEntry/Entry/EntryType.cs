@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public enum EntryType : int
     {

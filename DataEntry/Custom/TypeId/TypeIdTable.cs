@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public record DataIdentifierRegistry
     {

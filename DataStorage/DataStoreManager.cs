@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace mehmetsrl.DataManagement.DataStore
+namespace mehmetsrl.GameDataStore.Storage
 {
     public class DataStoreManager
     {

@@ -1,4 +1,4 @@
-# DataManagement
+# GameDataStore
 
 ## Purpose
 Two-layer data system: **Entries** defines a union-style value type (`Entry`) that can hold many primitive and custom types in a single struct; **DataStore** provides runtime data persistence and a database registry pattern.
@@ -7,13 +7,13 @@ Two-layer data system: **Entries** defines a union-style value type (`Entry`) th
 
 | Assembly | Path | Depends On |
 |---|---|---|
-| `mehmetsrl.DataManagement.Entries` | `DataEntry/mehmetsrl.DataManagement.Entries.asmdef` | Unity.Mathematics, ZString |
-| `mehmetsrl.DataManagement.Entries.Editor` | `DataEntry/Editor/mehmetsrl.DataManagement.Entries.Editor.asmdef` | DataManagement.Entries (Editor only) |
-| `mehmetsrl.DataManagement.DataStore` | `DataStorage/mehmetsrl.DataManagement.DataStore.asmdef` | DataManagement.Entries, Utilities.DataType, Utilities, ZString, Utilities.DataTypeTools, Unity.Mathematics |
+| `mehmetsrl.GameDataStore.Entries` | `DataEntry/mehmetsrl.GameDataStore.Entries.asmdef` | Unity.Mathematics, ZString |
+| `mehmetsrl.GameDataStore.Entries.Editor` | `DataEntry/Editor/mehmetsrl.GameDataStore.Entries.Editor.asmdef` | GameDataStore.Entries (Editor only) |
+| `mehmetsrl.GameDataStore.Storage` | `DataStorage/mehmetsrl.GameDataStore.Storage.asmdef` | GameDataStore.Entries, Utilities.DataType, Utilities, ZString, Utilities.DataTypeTools, Unity.Mathematics |
 
 ## Key Classes
 
-### Entries (`mehmetsrl.DataManagement.Entries`)
+### Entries (`mehmetsrl.GameDataStore.Entries`)
 - **`Entry`** — `[StructLayout.Explicit]` union struct holding int, float, bool, string, int2/int3, float2/float3, double, char, Entity, EntityLevel, EntityType, WeekDay. Implements `IEquatable`, `IComparable`, `IConvertible`
 - **`EntryType`** — Enum of all supported Entry value types
 - **`EntryTypeInfo`** / **`EntryComponentInfo`** — Metadata records describing an EntryType's fields
@@ -24,7 +24,7 @@ Two-layer data system: **Entries** defines a union-style value type (`Entry`) th
 - **`DataDefinition`**, **`DataDefinitionConfig`**, **`DataDefinitionList`**, **`DataDefinitionMap`** — ScriptableObject-based type definition configuration
 - **Custom types**: `Entity`, `EntityType`, `EntityLevel`, `WeekDay`
 
-### DataStore (`mehmetsrl.DataManagement.DataStore`)
+### DataStore (`mehmetsrl.GameDataStore.Storage`)
 - **`DataStoreManager`** — Singleton registry of `IDataStoreDatabase` instances; create/register/get/dispose databases
 - **`IDataStoreDatabase`** — Database interface
 - **`DataStoreDatabase`** — Abstract base database with persistence hooks
@@ -52,8 +52,8 @@ DataStoreManager.Instance.Dispose<PlayerDatabase>();
 
 ## File Structure
 ```
-DataManagement/DataEntry/
-  mehmetsrl.DataManagement.Entries.asmdef
+DataEntry/
+  mehmetsrl.GameDataStore.Entries.asmdef
   EntryManager.cs
   Entry/EntryTypeInfo.cs
   Custom/TypeId/ITypeId.cs
@@ -67,21 +67,26 @@ DataManagement/DataEntry/
   Custom/Types/Entity/EntityLevel.cs
   Custom/Types/Entity/EntityType.cs
   Editor/
-    mehmetsrl.DataManagement.Entries.Editor.asmdef
+    mehmetsrl.GameDataStore.Entries.Editor.asmdef
     EntryPropertyDrawer.cs
-DataManagement/DataStorage/
-  mehmetsrl.DataManagement.DataStore.asmdef
+DataStorage/
+  mehmetsrl.GameDataStore.Storage.asmdef
   DataStoreAttributes.cs
   DataStoreManager.cs
   DataStoreDatabase.cs
-DataManagement/Test/
-  mehmetsrl.DataManagement.Test.asmdef
+Test/
+  mehmetsrl.GameDataStore.Test.asmdef
   DataStoreTest.cs
   BookDataStore.cs
 ```
 
 ## Downstream Dependents
-`mehmetsrl.Bindings`, `mehmetsrl.Presenter`, `mehmetsrl.ScreenManagement`, `mehmetsrl.DataManagement.DataStore`
+
+`mehmetsrl.Bindings`, `mehmetsrl.Presenter`, `mehmetsrl.ScreenManagement` (all in Infrastructural's Reusable layer) consume `Entries` and/or `Storage` via GUID asmdef refs — those refs survived the rename so consumer code only needs the namespace update (`using mehmetsrl.DataManagement.*` → `using mehmetsrl.GameDataStore.*`).
+
+## Naming History
+
+Originally named `DataManagement` (mehmetsrl.DataManagement.Entries / .DataStore). Renamed to `GameDataStore` in April 2026 because "DataManagement" was too generic and overlapped semantically with `AssetManagement`. The DataStore asmdef is now `Storage` (not `GameDataStore.DataStore`) to avoid the awkward name doubling.
 
 ## Notes
 - `Entry` uses `[FieldOffset]` overlapping — be aware when holding reference types (string) alongside value types

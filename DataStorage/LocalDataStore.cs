@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Cysharp.Text;
-using mehmetsrl.DataManagement.Entries;
+using mehmetsrl.GameDataStore.Entries;
 using mehmetsrl.Utilities.DataType;
 using mehmetsrl.Utilities.StringTools;
 using mehmetsrl.Utilities.Pooling;
@@ -11,7 +11,7 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
-namespace mehmetsrl.DataManagement.DataStore
+namespace mehmetsrl.GameDataStore.Storage
 {
     // public enum ObsoleteOption
     // {

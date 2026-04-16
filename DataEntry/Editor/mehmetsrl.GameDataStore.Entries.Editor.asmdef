@@ -1,0 +1,18 @@
+{
+    "name": "mehmetsrl.GameDataStore.Entries.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:226cec1c46e094d08b3cda3756310dc6"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     [System.Serializable]
     public struct DataDefinitionMap<T> where T : IDataIdentifier

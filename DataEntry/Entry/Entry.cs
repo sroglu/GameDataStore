@@ -9,7 +9,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]

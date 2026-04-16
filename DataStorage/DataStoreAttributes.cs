@@ -1,6 +1,6 @@
 using System;
 
-namespace mehmetsrl.DataManagement.DataStore
+namespace mehmetsrl.GameDataStore.Storage
 {
     public enum TypeBindingSetup
     {

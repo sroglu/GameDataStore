@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public record DataDefinitionList
     {

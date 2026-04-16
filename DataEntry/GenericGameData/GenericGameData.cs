@@ -1,7 +1,7 @@
 using System;
 using Sirenix.OdinInspector;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     [Serializable]
     public struct GenericGameData

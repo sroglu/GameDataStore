@@ -1,9 +1,13 @@
 {
-    "name": "mehmetsrl.DataManagement.Test",
+    "name": "mehmetsrl.GameDataStore.Storage",
     "rootNamespace": "",
     "references": [
-        "GUID:25675ed65a1804b8c866cc8fa4f976e6",
-        "GUID:226cec1c46e094d08b3cda3756310dc6"
+        "GUID:226cec1c46e094d08b3cda3756310dc6",
+        "mehmetsrl.Utilities.StringTools",
+        "mehmetsrl.Utilities.DataTypes",
+        "GUID:33661e06c33d31b4c9223810bf503247",
+        "mehmetsrl.Utilities.Pooling",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,6 +1,6 @@
 using System;
-using mehmetsrl.DataManagement.DataStore;
-using mehmetsrl.DataManagement.Entries;
+using mehmetsrl.GameDataStore.Storage;
+using mehmetsrl.GameDataStore.Entries;
 using UnityEngine;
 
 namespace mehmetsrl.DataStorage.Test

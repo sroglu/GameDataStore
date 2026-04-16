@@ -1,6 +1,6 @@
 using System;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public class EntryManager : IDisposable
     {

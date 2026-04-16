@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     [CreateAssetMenu(fileName = "DataDefinitionConfig", menuName = "GameConfigs/DataDefinitionConfig", order = 1)]
     public class DataDefinitionConfig : ScriptableObject

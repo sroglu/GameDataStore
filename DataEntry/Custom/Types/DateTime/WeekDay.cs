@@ -1,4 +1,4 @@
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public enum WeekDay
     {

@@ -1,4 +1,4 @@
-namespace mehmetsrl.DataManagement.Entries
+namespace mehmetsrl.GameDataStore.Entries
 {
     public struct DataDefinition<T> where T : IDataIdentifier
     {
