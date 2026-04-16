@@ -1,0 +1,17 @@
+{
+    "name": "mehmetsrl.DataManagement.Test",
+    "rootNamespace": "",
+    "references": [
+        "GUID:25675ed65a1804b8c866cc8fa4f976e6",
+        "GUID:226cec1c46e094d08b3cda3756310dc6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
