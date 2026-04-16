@@ -88,6 +88,24 @@ Test/
 
 Originally named `DataManagement` (mehmetsrl.DataManagement.Entries / .DataStore). Renamed to `GameDataStore` in April 2026 because "DataManagement" was too generic and overlapped semantically with `AssetManagement`. The DataStore asmdef is now `Storage` (not `GameDataStore.DataStore`) to avoid the awkward name doubling.
 
+## Scope Clarification
+
+GameDataStore is a **runtime in-game data modeling layer** — NOT an app-level save/persistence system. Understand the distinction before picking where to write things:
+
+- **Use GameDataStore when:** modeling typed game data at runtime (player stats as `Entry` values, item definitions as `DataDefinition` SOs, databases indexed by `ProcessedKey`), or when you need a typed Entry-union for bindings/UI.
+- **Do NOT use GameDataStore when:** writing JSON save files with schema versioning, atomic file writes, migrations, or multi-namespace profile data. These concerns belong to an app-level save layer (e.g., a hub-app `Save` module built on `Utilities/FileSystemTools` atomic write).
+
+The two can coexist: an app's save layer serializes a `GameDataStore` database snapshot into its own JSON schema on save, and rehydrates the database on load. GameDataStore does not own the file format, the atomic write, or the migration pipeline.
+
+## Limitations / Known Gaps
+
+- **No JSON persistence or atomic-write built in.** `LocalDataStore` can hold state in memory and persist via derived-class hooks, but the file I/O semantics (atomic write, fsync, .bak fallback, schema version migration) are NOT part of this module. Build those at the app-save layer.
+- **`Entry` uses `[FieldOffset]` explicit overlay.** Reference fields (e.g., `string`) overlap value fields (e.g., `int`, `float`). Reading an overlapping slot after writing a different variant yields undefined results. Always read the variant that matches what was last written — `EntryType` tracks this.
+- **`DataStoreManager` is a process singleton.** Initialize once (typically via a SubSystem) before any consumer touches `DataStoreManager.Instance`. There is no built-in per-profile scoping — if you need isolation (e.g., multi-user on one device), wrap the manager per profile yourself or namespace keys in `ProcessedKey`.
+- **`ProcessedKey` is a flat string.** No hierarchical namespace built in — keys are opaque strings. Convention is slash-delimited (`player/health`, `inventory/potion_small`) but no API enforces it.
+- **No built-in change notifications.** Mutating a database's Entry does not emit a signal or event. If downstream UI needs to react to data changes, wire Signaling (`SignalTracker.Emit<DataChangedSignal>()`) at the mutation call site, or wrap the database.
+- **GUID asmdef refs survive the rename.** Consumers (`Bindings`, `Presenter`, `ScreenManagement`) reference GameDataStore via asmdef GUIDs, so the DataManagement → GameDataStore rename does not break references. Only `using` directives in source code need updating.
+
 ## Notes
 - `Entry` uses `[FieldOffset]` overlapping — be aware when holding reference types (string) alongside value types
 - `DataStoreManager` is a **singleton** — initialize in a SubSystem before consumers
