@@ -687,42 +687,68 @@ namespace mehmetsrl.GameDataStore.Entries
 
         public int CompareTo(Entry other)
         {
-
-            Debug.Log("Comparing " + this + " to " + other);
             if(Type != other.Type)
                 throw new Exception($"Both entries must have the same type to be compared. Entry1: {Type}, Entry2: {other.Type}");
 
             switch (Type)
             {
                 //@formatter:off
-                case EntryType.Invalid: break;
-                case EntryType.Int: return InternalInt.CompareTo(other.InternalInt);
-                case EntryType.Int2: break;
-                case EntryType.Int3: break;
-                case EntryType.Int64: return InternalInt64.CompareTo(other.InternalInt64);
-                case EntryType.UInt: return InternalUInt.CompareTo(other.InternalUInt);
-                case EntryType.UInt2: break;
-                case EntryType.UInt3: break;
-                case EntryType.UInt64: break;
-                case EntryType.Short: return InternalShort.CompareTo(other.InternalShort);
-                case EntryType.UShort: return InternalUShort.CompareTo(other.InternalUShort);
-                case EntryType.Byte: return InternalByte.CompareTo(other.InternalByte);
-                case EntryType.SByte: return InternalSByte.CompareTo(other.InternalSByte);
-                case EntryType.Float: return InternalFloat.CompareTo(other.InternalFloat);
-                case EntryType.Float2: break;
-                case EntryType.Float3: break;
-                case EntryType.Double: return InternalDouble.CompareTo(other.InternalDouble);
-                case EntryType.Char: return InternalChar.CompareTo(other.InternalChar);
-                case EntryType.String: return string.Compare(InternalString, other.InternalString, StringComparison.Ordinal);
-                case EntryType.Bool: return InternalBool.CompareTo(other.InternalBool);
-                case EntryType.EntityType: return String.CompareOrdinal(InternalEntityType.TextId, other.InternalEntityType.TextId);
+                case EntryType.Invalid: return 0;
+                case EntryType.Int:     return InternalInt.CompareTo(other.InternalInt);
+                case EntryType.Int2:
+                {
+                    var cmp = InternalInt2.x.CompareTo(other.InternalInt2.x);
+                    return cmp != 0 ? cmp : InternalInt2.y.CompareTo(other.InternalInt2.y);
+                }
+                case EntryType.Int3:
+                {
+                    var cmp = InternalInt3.x.CompareTo(other.InternalInt3.x);
+                    if (cmp != 0) return cmp;
+                    cmp = InternalInt3.y.CompareTo(other.InternalInt3.y);
+                    return cmp != 0 ? cmp : InternalInt3.z.CompareTo(other.InternalInt3.z);
+                }
+                case EntryType.Int64:   return InternalInt64.CompareTo(other.InternalInt64);
+                case EntryType.UInt:    return InternalUInt.CompareTo(other.InternalUInt);
+                case EntryType.UInt2:
+                {
+                    var cmp = InternalUInt2.x.CompareTo(other.InternalUInt2.x);
+                    return cmp != 0 ? cmp : InternalUInt2.y.CompareTo(other.InternalUInt2.y);
+                }
+                case EntryType.UInt3:
+                {
+                    var cmp = InternalUInt3.x.CompareTo(other.InternalUInt3.x);
+                    if (cmp != 0) return cmp;
+                    cmp = InternalUInt3.y.CompareTo(other.InternalUInt3.y);
+                    return cmp != 0 ? cmp : InternalUInt3.z.CompareTo(other.InternalUInt3.z);
+                }
+                case EntryType.UInt64:  return InternalUInt64.CompareTo(other.InternalUInt64);
+                case EntryType.Short:   return InternalShort.CompareTo(other.InternalShort);
+                case EntryType.UShort:  return InternalUShort.CompareTo(other.InternalUShort);
+                case EntryType.Byte:    return InternalByte.CompareTo(other.InternalByte);
+                case EntryType.SByte:   return InternalSByte.CompareTo(other.InternalSByte);
+                case EntryType.Float:   return InternalFloat.CompareTo(other.InternalFloat);
+                case EntryType.Float2:
+                {
+                    var cmp = InternalFloat2.x.CompareTo(other.InternalFloat2.x);
+                    return cmp != 0 ? cmp : InternalFloat2.y.CompareTo(other.InternalFloat2.y);
+                }
+                case EntryType.Float3:
+                {
+                    var cmp = InternalFloat3.x.CompareTo(other.InternalFloat3.x);
+                    if (cmp != 0) return cmp;
+                    cmp = InternalFloat3.y.CompareTo(other.InternalFloat3.y);
+                    return cmp != 0 ? cmp : InternalFloat3.z.CompareTo(other.InternalFloat3.z);
+                }
+                case EntryType.Double:      return InternalDouble.CompareTo(other.InternalDouble);
+                case EntryType.Char:        return InternalChar.CompareTo(other.InternalChar);
+                case EntryType.String:      return string.Compare(InternalString, other.InternalString, StringComparison.Ordinal);
+                case EntryType.Bool:        return InternalBool.CompareTo(other.InternalBool);
+                case EntryType.EntityType:  return String.CompareOrdinal(InternalEntityType.TextId, other.InternalEntityType.TextId);
                 case EntryType.EntityLevel: return InternalEntityLevel.CompareTo(other.InternalEntityLevel);
-                case EntryType.WeekDay: return InternalWeekDay.CompareTo(other.InternalWeekDay);
-                
+                case EntryType.WeekDay:     return InternalWeekDay.CompareTo(other.InternalWeekDay);
                 //@formatter:on
-                default: throw new ArgumentOutOfRangeException();
             }
-            throw new Exception($"Don't know how to compare entries of type {Type}");
+            throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown EntryType in CompareTo — did you forget to add a case for a new type?");
         }
         
         #endregion
@@ -736,20 +762,56 @@ namespace mehmetsrl.GameDataStore.Entries
                 //@formatter:off
                 case EntryType.Invalid: break;
                 case EntryType.Int: if (int.TryParse(text, out var intValue)) { entry = new Entry(intValue); return true; } break;
-                case EntryType.Int2: throw new NotImplementedException();
-                case EntryType.Int3: throw new NotImplementedException();
+                case EntryType.Int2:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 2 && int.TryParse(parts[0].Trim(), out var i2x) && int.TryParse(parts[1].Trim(), out var i2y))
+                    { entry = new Entry(new int2(i2x, i2y)); return true; }
+                    break;
+                }
+                case EntryType.Int3:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 3 && int.TryParse(parts[0].Trim(), out var i3x) && int.TryParse(parts[1].Trim(), out var i3y) && int.TryParse(parts[2].Trim(), out var i3z))
+                    { entry = new Entry(new int3(i3x, i3y, i3z)); return true; }
+                    break;
+                }
                 case EntryType.Int64: if (Int64.TryParse(text, out var int64Value)) { entry = new Entry(int64Value); return true; } break;
                 case EntryType.UInt: if (uint.TryParse(text, out var uintValue)) { entry = new Entry(uintValue); return true; } break;
-                case EntryType.UInt2: throw new NotImplementedException();
-                case EntryType.UInt3: throw new NotImplementedException();
+                case EntryType.UInt2:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 2 && uint.TryParse(parts[0].Trim(), out var u2x) && uint.TryParse(parts[1].Trim(), out var u2y))
+                    { entry = new Entry(new uint2(u2x, u2y)); return true; }
+                    break;
+                }
+                case EntryType.UInt3:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 3 && uint.TryParse(parts[0].Trim(), out var u3x) && uint.TryParse(parts[1].Trim(), out var u3y) && uint.TryParse(parts[2].Trim(), out var u3z))
+                    { entry = new Entry(new uint3(u3x, u3y, u3z)); return true; }
+                    break;
+                }
                 case EntryType.UInt64: if (UInt64.TryParse(text, out var uInt64Value)) { entry = new Entry(uInt64Value); return true; } break;
                 case EntryType.Short: if (short.TryParse(text, out var shortValue)) { entry = new Entry(shortValue); return true; } break;
                 case EntryType.UShort: if (ushort.TryParse(text, out var ushortValue)) { entry = new Entry(ushortValue); return true; } break;
                 case EntryType.Byte: if (byte.TryParse(text, out var byteValue)) { entry = new Entry(byteValue); return true; } break;
                 case EntryType.SByte: if (sbyte.TryParse(text, out var sbyteValue)) { entry = new Entry(sbyteValue); return true; } break;
                 case EntryType.Float: if (float.TryParse(text, out var floatValue)) { entry = new Entry(floatValue); return true; } break;
-                case EntryType.Float2: throw new NotImplementedException();
-                case EntryType.Float3: throw new NotImplementedException();
+                case EntryType.Float2:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 2 && float.TryParse(parts[0].Trim(), out var f2x) && float.TryParse(parts[1].Trim(), out var f2y))
+                    { entry = new Entry(new float2(f2x, f2y)); return true; }
+                    break;
+                }
+                case EntryType.Float3:
+                {
+                    var parts = text.Split(',');
+                    if (parts.Length == 3 && float.TryParse(parts[0].Trim(), out var f3x) && float.TryParse(parts[1].Trim(), out var f3y) && float.TryParse(parts[2].Trim(), out var f3z))
+                    { entry = new Entry(new float3(f3x, f3y, f3z)); return true; }
+                    break;
+                }
                 case EntryType.Double: if (double.TryParse(text, out var doubleValue)) { entry = new Entry(doubleValue); return true; } break;
                 case EntryType.Char: if (char.TryParse(text, out var charValue)) { entry = new Entry(charValue); return true; } break;
                 case EntryType.String: entry = new Entry(text); return true;
@@ -1561,5 +1623,88 @@ namespace mehmetsrl.GameDataStore.Entries
         
 
         #endregion
+
+        /*
+        ╔══════════════════════════════════════════════════════════════════╗
+        ║  NEW ENTRY TYPE TEMPLATE                                       ║
+        ║  Copy-paste and find-replace to add a new type.                ║
+        ║  Search "NewType" → your type name, "newtype" → lowercase.    ║
+        ║  After adding, run EntryComparisonTests — guard tests will     ║
+        ║  catch any missed location.                                    ║
+        ╚══════════════════════════════════════════════════════════════════╝
+
+        ── 1. EntryType.cs ──────────────────────────────────────────────
+
+        // In enum EntryType:
+        NewType = <next_int>,
+
+        // In EntryTypeOrAnyType:
+        NewType = EntryType.NewType,
+
+
+        ── 2. Entry.cs — Data Field ─────────────────────────────────────
+
+        // In #region Data Fields (FieldOffset 4 for value types, 16 for reference types):
+        [FieldOffset(4), ShowInInspector, HideLabel, HorizontalGroup, ShowIf("IsShowNewType"), NonSerialized] internal NewTypeT InternalNewType;
+
+
+        ── 3. Entry.cs — Accessor ───────────────────────────────────────
+
+        // Value property:
+        public NewTypeT ValueNewType
+        {
+            get { if (Type != EntryType.NewType) throw new InvalidCastException(...); return InternalNewType; }
+            set { if (Type != EntryType.NewType) throw new InvalidCastException(...); InternalNewType = value; }
+        }
+
+        // TryGet + Get:
+        public bool TryGetNewType(out NewTypeT value) { value = InternalNewType; return Type == EntryType.NewType; }
+        public NewTypeT GetNewType() => Type == EntryType.NewType ? InternalNewType : throw new InvalidCastException();
+
+
+        ── 4. Entry.cs — Constructor + Implicit ─────────────────────────
+
+        public Entry(NewTypeT value):this() { Type = EntryType.NewType; InternalNewType = value; }
+        public static implicit operator Entry(NewTypeT value) => new Entry(value);
+
+
+        ── 5. Entry.cs — Switch Cases (add to each existing switch) ─────
+
+        // CompareTo:   case EntryType.NewType: return InternalNewType.CompareTo(other.InternalNewType);
+        // TryParse:    case EntryType.NewType: if (NewTypeT.TryParse(text, out var ntVal)) { entry = new Entry(ntVal); return true; } break;
+        // ToString:    case EntryType.NewType: return InternalNewType.ToString();
+        // GetTypePrefix: case EntryType.NewType: return "nt:";
+        // ToObject:    case EntryType.NewType: return InternalNewType;
+        // FromObject:  case EntryType.NewType: return new Entry((NewTypeT)value);
+        // GetHashCode: case EntryType.NewType: return (Type,InternalNewType).GetHashCode();
+        // GetTypeCode: case EntryType.NewType: return TypeCode.Object;
+
+        // NOTE: Equals does NOT need a case — the InternalInt3 proxy covers all value types ≤12 bytes.
+        //       If your type is >12 bytes or is a reference type, add an explicit Equals case like String.
+
+
+        ── 6. Entry.cs — Editor ─────────────────────────────────────────
+
+        // IsShow property (inside #if UNITY_EDITOR):
+        private bool IsShowNewType => Type == EntryType.NewType;
+
+
+        ── 7. EntryType.cs — EntryTypeTools ─────────────────────────────
+
+        // EntryTypeInfoList:  info[(int) EntryType.NewType] = Components(EntryType.NewType);
+        // EntryTypeToSystemTypeMap:  EntryTypeToSystemTypeMap[(int) EntryType.NewType] = typeof(NewTypeT);
+        // SystemTypeToEntryTypeMap:  SystemTypeToEntryTypeMap[typeof(NewTypeT)] = EntryType.NewType;
+        // TryParse:  case "NewType": entryType = EntryType.NewType; break;
+        // Parse:     case "NewType": return EntryType.NewType;
+        // ToString:  case EntryType.NewType: return "NewType";
+
+
+        ── 8. EntryComparisonTests.cs ───────────────────────────────────
+
+        // TestPairs:      (EntryType.NewType, new Entry(someValue1), new Entry(someValue2)),
+        // ParseTestCases: (EntryType.NewType, "valueStr", new Entry(expectedValue)),
+        // CreateTestEntry: case EntryType.NewType: return new Entry(testValue);
+
+        */
     }
 }

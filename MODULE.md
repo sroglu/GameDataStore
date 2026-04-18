@@ -78,6 +78,9 @@ Test/
   mehmetsrl.GameDataStore.Test.asmdef
   DataStoreTest.cs
   BookDataStore.cs
+Tests/
+  mehmetsrl.GameDataStore.Tests.asmdef
+  EntryComparisonTests.cs
 ```
 
 ## Downstream Dependents
@@ -96,6 +99,18 @@ GameDataStore is a **runtime in-game data modeling layer** — NOT an app-level 
 - **Do NOT use GameDataStore when:** writing JSON save files with schema versioning, atomic file writes, migrations, or multi-namespace profile data. These concerns belong to an app-level save layer (e.g., a hub-app `Save` module built on `Utilities/FileSystemTools` atomic write).
 
 The two can coexist: an app's save layer serializes a `GameDataStore` database snapshot into its own JSON schema on save, and rehydrates the database on load. GameDataStore does not own the file format, the atomic write, or the migration pipeline.
+
+## Adding a New EntryType
+
+When adding a new value type to the `Entry` struct, update these locations:
+
+1. **`EntryType.cs`** — Add enum value
+2. **`Entry.cs`** — Add `[FieldOffset(4)]` field, constructor, implicit operator, accessor properties (Value/TryGet/Get), and cases in:
+   - `Equals()`, `GetHashCode()`, `CompareTo()`, `TryParse()`, `ToString()` (both overloads), `GetTypePrefix()`, `ToObject()`, `FromObject()`, `GetTypeCode()`
+3. **`EntryType.cs` → `EntryTypeTools`** — Add to `EntryTypeInfoList`, `EntryTypeToSystemTypeMap`, `SystemTypeToEntryTypeMap`, `TryParse()`, `Parse()`, `ToString()`
+4. **`EntryComparisonTests.cs`** — Add to `TestPairs`, `ParseTestCases`, and `CreateTestEntry()` switch
+
+The **extensibility guard tests** (`AllEntryTypes_CoveredBy*`) iterate all `EntryType` enum values and call each method. If you add a new type but miss any method, these tests fail with a clear message indicating the missing case.
 
 ## Limitations / Known Gaps
 
