@@ -360,23 +360,18 @@ namespace mehmetsrl.GameDataStore.Storage
 
         public void DeleteAllStartsWith(ProcessedKey processedKey, ReadOnlyDeleteOption readOnlyDeleteOption)
         {
-            while (true)
+            using var _ = New.List(out List<ProcessedKey> keysToDelete);
+            foreach (var localEntriesKey in _LocalEntries.Keys)
             {
-                var shouldCheckAgain = false;
-                foreach (var localEntriesKey in _LocalEntries.Keys)
+                if (localEntriesKey.Key.StartsWith(processedKey.Key, StringComparison.Ordinal))
                 {
-                    if (localEntriesKey.Key.StartsWith(processedKey.Key, StringComparison.Ordinal))
-                    {
-                        _InternalDelete(processedKey, readOnlyDeleteOption);
-                        shouldCheckAgain = true;
-                        break;
-                    }
+                    keysToDelete.Add(localEntriesKey);
                 }
+            }
 
-                if (!shouldCheckAgain)
-                {
-                    return;
-                }
+            foreach (var key in keysToDelete)
+            {
+                _InternalDelete(key, readOnlyDeleteOption);
             }
         }
 
